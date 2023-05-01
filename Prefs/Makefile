@@ -1,9 +1,10 @@
 ARCHS = arm64 arm64e
-TARGET = iphone:12.2:12.2
+TARGET = iphone:14.5:14.5
 
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = AxonPrefs
+$(BUNDLE_NAME)_CFLAGS = -Wno-error=deprecated-declarations
 $(BUNDLE_NAME)_FILES = Preferences.m AXNAppearanceSettings.m AXNListItemsController.m AXNDebugController.m AXNLocationController.m
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS = UIKit

@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 @protocol clvc <NSObject>
 @property (nonatomic,assign) BOOL axnAllowChanges;
 
