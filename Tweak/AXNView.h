@@ -23,6 +23,7 @@
 
 -(void)refresh;
 -(void)reset;
+-(id)initWithFrame:(CGRect)frame verticalHeight:(NSInteger)verticalHeight ;
 
 /* Compatibility stuff. */
 -(void)setContentHost:(id)arg1 ;

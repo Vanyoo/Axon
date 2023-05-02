@@ -55,6 +55,20 @@ NSMutableDictionary *prefs;
 			[specifiers addObject:self.yAxisSpecifier];
 		}
 
+		[specifiers addObject:({
+			PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Vertical Height" target:self set:nil get:nil detail:nil cell:PSGroupCell edit:nil];
+			specifier;
+		})];
+		[specifiers addObject:({
+			PSSpecifier *verticalHeightSpecifier = [PSSpecifier preferenceSpecifierNamed:@"verticalHeight" target:self set:@selector(setNumber:forSpecifier:) get:@selector(getSwitch:) detail:Nil cell:PSSliderCell edit:Nil];
+			[verticalHeightSpecifier setProperty:@"verticalHeight" forKey:@"displayIdentifier"];
+			[verticalHeightSpecifier setProperty:@500 forKey:@"default"];
+			[verticalHeightSpecifier setProperty:@0 forKey:@"min"];
+			[verticalHeightSpecifier setProperty:[NSNumber numberWithFloat:[UIScreen mainScreen].bounds.size.height] forKey:@"max"];
+			[verticalHeightSpecifier setProperty:@YES forKey:@"showValue"];
+			verticalHeightSpecifier;
+		})];
+
 		_specifiers = [specifiers copy];
 	}
 

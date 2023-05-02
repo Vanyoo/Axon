@@ -5,7 +5,7 @@
 
 @implementation AXNView
 
--(id)initWithFrame:(CGRect)frame {
+-(id)initWithFrame:(CGRect)frame verticalHeight:(NSInteger)verticalHeight {
     self = [super initWithFrame:frame];
 
     self.badgesEnabled = YES;
@@ -33,7 +33,8 @@
         // 源代码：设置与屏幕底部锚点自适应
         // [self.collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
         // Hard coding，设置我的iPhone11，不与Dodo的Favorite重叠
-        [self.collectionView.heightAnchor constraintEqualToConstant:662],
+        [self.collectionView.heightAnchor constraintEqualToConstant:verticalHeight],
+        // [self.collectionView.heightAnchor constraintEqualToConstant:662],
     ]];
 
     return self;

@@ -19,6 +19,7 @@ NSInteger iconStyle;
 NSInteger verticalPosition;
 NSInteger autoLayout;
 NSInteger yAxis;
+NSInteger verticalHeight;
 NSInteger location;
 CGFloat spacing;
 
@@ -461,7 +462,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized) {
         initialized = YES;
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, 500)];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight) verticalHeight:verticalHeight];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         self.axnView.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         [AXNManager sharedInstance].view = self.axnView;
@@ -497,7 +498,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized) {
         initialized = YES;
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, 500)];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight) verticalHeight:verticalHeight];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         self.axnView.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         [AXNManager sharedInstance].view = self.axnView;
@@ -561,7 +562,7 @@ void updateViewConfiguration() {
     if (!initialized && location == 0) {
         initialized = YES;
         UIStackView *stackView = [self valueForKey:@"_stackView"];
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = self.axnView;
         updateViewConfiguration();
@@ -607,7 +608,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized && location == 1) {
         initialized = YES;
-        AXNView *axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
+        AXNView *axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
         axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = axnView;
         updateViewConfiguration();
@@ -619,7 +620,7 @@ void updateViewConfiguration() {
           [axnView.heightAnchor constraintEqualToConstant:style == 4 ? 30 : (style == 5 ? 36 : 90)]
         ] mutableCopy];
 
-        if(autoLayout) [constraints addObject:[axnView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-55]];
+        if(autoLayout) [constraints addObject:[axnView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-50]];
         else [constraints addObject:[axnView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:yAxis]];
 
         [self.view addSubview:axnView];
@@ -644,7 +645,7 @@ void updateViewConfiguration() {
           [axnView.heightAnchor constraintEqualToConstant:style == 4 ? 30 : (style == 5 ? 36 : 90)]
         ] mutableCopy];
 
-        if(autoLayout) [constraints addObject:[axnView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-55]];
+        if(autoLayout) [constraints addObject:[axnView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-50]];
         else [constraints addObject:[axnView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:yAxis]];
 
         [self.view addSubview:axnView];
@@ -661,7 +662,7 @@ void updateViewConfiguration() {
     if (!initialized && location == 0) {
         initialized = YES;
         UIStackView *stackView = [self valueForKey:@"_stackView"];
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = self.axnView;
         updateViewConfiguration();
@@ -710,7 +711,7 @@ static void displayStatusChanged(CFNotificationCenterRef center, void *observer,
 
 
 void loadPrefs() {
-	prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/me.nepeta.axon.plist"];
+  prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/me.nepeta.axon.plist"];
   enabled = prefs[@"Enabled"] != nil ? [prefs[@"Enabled"] boolValue] : true;
   vertical = prefs[@"Vertical"] != nil ? [prefs[@"Vertical"] boolValue] : false;
   hapticFeedback = prefs[@"HapticFeedback"] != nil ? [prefs[@"HapticFeedback"] boolValue] : true;
@@ -730,6 +731,7 @@ void loadPrefs() {
   location = [prefs[@"location"] intValue] ?: 0;
   if(autoLayout == false) location = 1;
   yAxis = [prefs[@"yAxis"] intValue] ?: 0;
+  verticalHeight = [prefs[@"verticalHeight"] intValue] ?: 500;
   if(style > 5) style = 4;
   updateViewConfiguration();
 }
