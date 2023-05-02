@@ -30,7 +30,10 @@
         [self.collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
         [self.collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [self.collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        [self.collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        // 源代码：设置与屏幕底部锚点自适应
+        // [self.collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        // Hard coding，设置我的iPhone11，不与Dodo的Favorite重叠
+        [self.collectionView.heightAnchor constraintEqualToConstant:662],
     ]];
 
     return self;
