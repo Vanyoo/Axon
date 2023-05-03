@@ -9,10 +9,10 @@
     // if (self) {
     //     AXNAppearanceSettings *appearanceSettings = [[AXNAppearanceSettings alloc] init];
     //     self.hb_appearanceSettings = appearanceSettings;
-    //     self.respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Respring"
-    //                                 style:UIBarButtonItemStylePlain
-    //                                 target:self
-    //                                 action:@selector(respring:)];
+        // self.respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Respring"
+        //                             style:UIBarButtonItemStylePlain
+        //                             target:self
+        //                             action:@selector(respring:)];
     //     self.respringButton.tintColor = [UIColor whiteColor];
     //     self.navigationItem.rightBarButtonItem = self.respringButton;
     //
@@ -129,8 +129,10 @@
 
 - (void)respring:(id)sender {
     NSTask *t = [[[NSTask alloc] init] autorelease];
-    [t setLaunchPath:@"/usr/bin/killall"];
-    [t setArguments:[NSArray arrayWithObjects:@"backboardd", nil]];
+    [t setLaunchPath:@"/var/jb/usr/bin/killall"];
+    [t setArguments:[NSArray arrayWithObjects:@"-9", @"backboardd", nil]];
     [t launch];
+    // run_action("killall -9 SpringBoard");
 }
+
 @end
