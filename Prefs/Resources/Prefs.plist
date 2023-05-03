@@ -119,9 +119,14 @@
 			<string>AXNLocationController</string>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>me.nepeta.axon</string>
 			<key>label</key>
 			<string>LOCATION</string>
+			<key>PostNotification</key>
+			<string>me.nepeta.axon/ReloadPrefs</string>
 		</dict>
+		
 
 		<dict>
 			<key>cell</key>

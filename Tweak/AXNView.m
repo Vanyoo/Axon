@@ -2,17 +2,20 @@
 #import "AXNView.h"
 #import "AXNAppCell.h"
 #import "AXNManager.h"
+#import "AXNCollectionViewLayout.h"
 
 @implementation AXNView
 
--(id)initWithFrame:(CGRect)frame verticalHeight:(NSInteger)verticalHeight {
+-(id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 
     self.badgesEnabled = YES;
     self.badgesShowBackground = YES;
     self.showingLatestRequest = NO;
+    self.verticalHeight = frame.size.height;
     self.list = [NSMutableArray new];
 
+    // self.collectionViewLayout = [[AXNCollectionViewLayout alloc] init];
     self.collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
     self.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
@@ -26,16 +29,7 @@
 
     [self addSubview:self.collectionView];
 
-    [NSLayoutConstraint activateConstraints:@[
-        [self.collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [self.collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [self.collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        // 源代码：设置与屏幕底部锚点自适应
-        // [self.collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        // Hard coding，设置我的iPhone11，不与Dodo的Favorite重叠
-        [self.collectionView.heightAnchor constraintEqualToConstant:verticalHeight],
-        // [self.collectionView.heightAnchor constraintEqualToConstant:662],
-    ]];
+    [self refreshLayout];
 
     return self;
 }
@@ -159,6 +153,7 @@
     [[AXNManager sharedInstance] revealNotificationHistory:NO];
 }
 
+// 计算cell大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.badgesEnabled) {
         switch (self.style) {
@@ -258,6 +253,32 @@
 
     [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     [[AXNManager sharedInstance].sbclvc _setListHasContent:([self.list count] > 0)];
+}
+
+-(void) refreshLayout {
+    NSLog(@"[Axon] AXNView refresh layout...vertical height: %ld", (long)self.verticalHeight);
+    self.collectionView.frame = CGRectMake(self.collectionView.frame.origin.x, self.collectionView.frame.origin.y, self.collectionView.frame.size.width,
+        self.verticalHeight);
+    // self.collectionView.bounds = CGRectMake(self.collectionView.bounds.origin.x, self.collectionView.bounds.origin.y, self.collectionView.bounds.size.width,
+    //     self.verticalHeight);
+    // NSLog(@"[Axon] AXNView-before auto layout refresh layout finished\nCollection View frame(x,y,w,h): %ld,%ld,%ld,%ld\nCollection View bounds(x,y,w,h): %ld,%ld,%ld,%ld\n "
+    //     , (long)self.collectionView.frame.origin.x, (long)self.collectionView.frame.origin.y, (long)self.collectionView.frame.size.width,(long)self.collectionView.frame.size.height
+    //     , (long)self.collectionView.bounds.origin.x, (long)self.collectionView.bounds.origin.y, (long)self.collectionView.bounds.size.width,(long)self.collectionView.bounds.size.height
+    //     /*, (long)self.collectionViewLayout.frame.origin.x, self.collectionViewLayout.frame.origin.y, self.collectionViewLayout.frame.size.width,self.collectionViewLayout.frame.size.height*/);
+    [NSLayoutConstraint activateConstraints:@[
+        [self.collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        // 源代码：设置与屏幕底部锚点自适应
+        // [self.collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        // Hard coding，设置我的iPhone11，不与Dodo的Favorite重叠
+        [self.collectionView.heightAnchor constraintEqualToConstant:self.verticalHeight],
+        // [self.collectionView.heightAnchor constraintEqualToConstant:662],
+    ]];
+    NSLog(@"[Axon] AXNView-after auto layout refresh layout finished\nCollection View frame(x,y,w,h): %ld,%ld,%ld,%ld\nCollection View bounds(x,y,w,h): %ld,%ld,%ld,%ld\n "
+        , (long)self.collectionView.frame.origin.x, (long)self.collectionView.frame.origin.y, (long)self.collectionView.frame.size.width,(long)self.collectionView.frame.size.height
+        , (long)self.collectionView.bounds.origin.x, (long)self.collectionView.bounds.origin.y, (long)self.collectionView.bounds.size.width,(long)self.collectionView.bounds.size.height
+        /*, (long)self.collectionViewLayout.frame.origin.x, self.collectionViewLayout.frame.origin.y, self.collectionViewLayout.frame.size.width,self.collectionViewLayout.frame.size.height*/);
 }
 
 /* Compatibility stuff to keep it from safe moding. */

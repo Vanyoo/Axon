@@ -32,12 +32,24 @@ NSMutableDictionary *prefs;
 			specifier;
 		})];
 
+		[specifiers addObject:({
+			PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Vertical Height" target:self set:nil get:nil detail:nil cell:PSGroupCell edit:nil];
+			specifier;
+		})];
+		[specifiers addObject:({
+			PSSpecifier *verticalHeightSpecifier = [PSSpecifier preferenceSpecifierNamed:@"verticalHeight" target:self set:@selector(setNumber:forSpecifier:) get:@selector(getSwitch:) detail:Nil cell:PSSliderCell edit:Nil];
+			[verticalHeightSpecifier setProperty:@"verticalHeight" forKey:@"displayIdentifier"];
+			[verticalHeightSpecifier setProperty:@500 forKey:@"default"];
+			[verticalHeightSpecifier setProperty:@0 forKey:@"min"];
+			[verticalHeightSpecifier setProperty:[NSNumber numberWithFloat:[UIScreen mainScreen].bounds.size.height] forKey:@"max"];
+			[verticalHeightSpecifier setProperty:@YES forKey:@"showValue"];
+			verticalHeightSpecifier;
+		})];
 
 		[specifiers addObject:({
 			PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Y-Axis" target:self set:nil get:nil detail:nil cell:PSGroupCell edit:nil];
 			specifier;
 		})];
-
 		self.autoLayoutLocationSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Location" target:self set:@selector(setNumber:forSpecifier:) get:@selector(getSwitch:) detail:nil cell:PSSegmentCell edit:nil];
 		[self.autoLayoutLocationSpecifier setValues:@[@0, @1] titles:@[@"Top", @"Bottom (Beta)"]];
 		[self.autoLayoutLocationSpecifier.properties setValue:@"location" forKey:@"displayIdentifier"];
@@ -55,19 +67,7 @@ NSMutableDictionary *prefs;
 			[specifiers addObject:self.yAxisSpecifier];
 		}
 
-		[specifiers addObject:({
-			PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Vertical Height" target:self set:nil get:nil detail:nil cell:PSGroupCell edit:nil];
-			specifier;
-		})];
-		[specifiers addObject:({
-			PSSpecifier *verticalHeightSpecifier = [PSSpecifier preferenceSpecifierNamed:@"verticalHeight" target:self set:@selector(setNumber:forSpecifier:) get:@selector(getSwitch:) detail:Nil cell:PSSliderCell edit:Nil];
-			[verticalHeightSpecifier setProperty:@"verticalHeight" forKey:@"displayIdentifier"];
-			[verticalHeightSpecifier setProperty:@500 forKey:@"default"];
-			[verticalHeightSpecifier setProperty:@0 forKey:@"min"];
-			[verticalHeightSpecifier setProperty:[NSNumber numberWithFloat:[UIScreen mainScreen].bounds.size.height] forKey:@"max"];
-			[verticalHeightSpecifier setProperty:@YES forKey:@"showValue"];
-			verticalHeightSpecifier;
-		})];
+
 
 		_specifiers = [specifiers copy];
 	}
@@ -92,6 +92,7 @@ NSMutableDictionary *prefs;
 -(void)setNumber:(NSNumber *)value forSpecifier:(PSSpecifier *)specifier {
 	prefs[[specifier propertyForKey:@"displayIdentifier"]] = value;
 	[[prefs copy] writeToFile:PREFERENCE_IDENTIFIER atomically:FALSE];
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("me.nepeta.axon/ReloadPrefs"), NULL, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 }
 -(NSNumber *)getSwitch:(PSSpecifier *)specifier {
 	return [self getValue:[specifier propertyForKey:@"displayIdentifier"]];

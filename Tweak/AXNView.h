@@ -20,10 +20,11 @@
 @property (nonatomic, assign) NSInteger alignment;
 @property (nonatomic, assign) NSInteger iconStyle;
 @property (nonatomic, assign) CGFloat spacing;
+@property (nonatomic, assign) NSInteger verticalHeight;
 
 -(void)refresh;
 -(void)reset;
--(id)initWithFrame:(CGRect)frame verticalHeight:(NSInteger)verticalHeight ;
+-(id)initWithFrame:(CGRect)frame;
 
 /* Compatibility stuff. */
 -(void)setContentHost:(id)arg1 ;
@@ -33,5 +34,6 @@
 -(id)contentHost;
 -(void)_updateSizeToMimic;
 -(unsigned long long)_optionsForMainOverlay;
+-(void)refreshLayout;
 
 @end

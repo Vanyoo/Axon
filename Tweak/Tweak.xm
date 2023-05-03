@@ -37,6 +37,8 @@ void updateViewConfiguration() {
         [AXNManager sharedInstance].view.spacing = spacing;
         [AXNManager sharedInstance].view.alignment = alignment;
         [AXNManager sharedInstance].view.iconStyle = iconStyle;
+        [AXNManager sharedInstance].view.verticalHeight = verticalHeight;
+        [[AXNManager sharedInstance].view refreshLayout];
     }
 }
 
@@ -462,7 +464,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized) {
         initialized = YES;
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight) verticalHeight:verticalHeight];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight)];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         self.axnView.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         [AXNManager sharedInstance].view = self.axnView;
@@ -498,7 +500,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized) {
         initialized = YES;
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight) verticalHeight:verticalHeight];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 96, 0, 96, verticalHeight)];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         self.axnView.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         [AXNManager sharedInstance].view = self.axnView;
@@ -562,7 +564,7 @@ void updateViewConfiguration() {
     if (!initialized && location == 0) {
         initialized = YES;
         UIStackView *stackView = [self valueForKey:@"_stackView"];
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = self.axnView;
         updateViewConfiguration();
@@ -608,7 +610,7 @@ void updateViewConfiguration() {
     %orig;
     if (!initialized && location == 1) {
         initialized = YES;
-        AXNView *axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
+        AXNView *axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
         axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = axnView;
         updateViewConfiguration();
@@ -662,7 +664,7 @@ void updateViewConfiguration() {
     if (!initialized && location == 0) {
         initialized = YES;
         UIStackView *stackView = [self valueForKey:@"_stackView"];
-        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90) verticalHeight:verticalHeight];
+        self.axnView = [[AXNView alloc] initWithFrame:CGRectMake(0,0,64,90)];
         self.axnView.translatesAutoresizingMaskIntoConstraints = NO;
         [AXNManager sharedInstance].view = self.axnView;
         updateViewConfiguration();
@@ -711,6 +713,7 @@ static void displayStatusChanged(CFNotificationCenterRef center, void *observer,
 
 
 void loadPrefs() {
+  NSLog(@"[Axon] Load Prefs...");
   prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/me.nepeta.axon.plist"];
   enabled = prefs[@"Enabled"] != nil ? [prefs[@"Enabled"] boolValue] : true;
   vertical = prefs[@"Vertical"] != nil ? [prefs[@"Vertical"] boolValue] : false;
@@ -731,7 +734,7 @@ void loadPrefs() {
   location = [prefs[@"location"] intValue] ?: 0;
   if(autoLayout == false) location = 1;
   yAxis = [prefs[@"yAxis"] intValue] ?: 0;
-  verticalHeight = [prefs[@"verticalHeight"] intValue] ?: 500;
+  verticalHeight = [prefs[@"verticalHeight"] intValue] ?: 0;
   if(style > 5) style = 4;
   updateViewConfiguration();
 }
@@ -740,6 +743,7 @@ void loadPrefs() {
 %ctor {
   NSLog(@"[Axon] init");
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("me.nepeta.axon/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
   loadPrefs();
 
   if(enabled) {
